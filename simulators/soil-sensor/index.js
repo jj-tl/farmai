@@ -20,10 +20,24 @@ server.tool(
     zone: z.string().describe("The zone to check (e.g. 'Zone A')"),
   },
   async ({ zone }) => {
-    // Return a dynamically poor condition for testing (e.g., triggering an irrigation alert)
-    console.log(`Checking moisture for ${zone}...`);
+    // Mapping of zones to specific crops
+    const zoneCropMap = {
+      "Zone A": "Corn",
+      "Zone B": "Soybeans",
+      "Zone C": "Wheat",
+      "Zone D": "Tomatoes"
+    };
+
+    const crop = zoneCropMap[zone] || "Unknown";
+    
+    // Simulate real-time moisture changes (e.g., between 15% and 80%)
+    // For testing, we can keep it low to trigger alerts as before
+    const moisture_pct = Math.floor(Math.random() * (25 - 15 + 1) + 15); 
+    const status = moisture_pct < 20 ? "Critical Dry" : "Adequate";
+
+    console.log(`Checking moisture for ${zone} (${crop})...`);
     return {
-      content: [{ type: "text", text: JSON.stringify({ zone, moisture_pct: 18, status: "Critical Dry" }) }],
+      content: [{ type: "text", text: JSON.stringify({ zone, crop, moisture_pct, status }) }],
     };
   }
 );

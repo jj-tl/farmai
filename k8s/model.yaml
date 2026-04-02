@@ -1,11 +1,15 @@
-apiVersion: kagent.dev/v1alpha1
+apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
 metadata:
   name: farm-ai-core
   namespace: smart-farm-demo
 spec:
-  provider: OpenAI # Or VertexAI/Anthropic/Ollama depending on your cluster setup
-  model: gpt-4o
-  apiKeySecretRef:
-    name: llm-api-key
-    key: api-key
+  apiKeySecret: kagent-azure-openai
+  apiKeySecretKey: AZUREOPENAI_API_KEY
+  azureOpenAI:
+    apiVersion: '2025-04-14'
+    azureAdToken: ''
+    azureDeployment: kagent-gpt-4.1-mini
+    azureEndpoint: https://landscape-poc.openai.azure.com/
+  model: gpt-4.1-mini
+  provider: AzureOpenAI
