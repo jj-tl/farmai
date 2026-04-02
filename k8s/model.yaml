@@ -1,0 +1,11 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ModelConfig
+metadata:
+  name: farm-ai-core
+  namespace: smart-farm-demo
+spec:
+  provider: OpenAI # Or VertexAI/Anthropic/Ollama depending on your cluster setup
+  model: gpt-4o
+  apiKeySecretRef:
+    name: llm-api-key
+    key: api-key

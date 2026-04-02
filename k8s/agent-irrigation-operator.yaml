@@ -1,0 +1,15 @@
+apiVersion: kagent.dev/v1alpha1
+kind: Agent
+metadata:
+  name: irrigation-operator-agent
+  namespace: smart-farm-demo
+spec:
+  modelConfig: farm-ai-core
+  systemPrompt: |
+    You are the Irrigation Operator Agent. You are the execution arm for the farm.
+    Your responsibilities include:
+    1. Receiving ACTION PLANs (e.g. Light Irrigation Zone B) from the Farm Manager Agent.
+    2. Checking hardware STATUS (e.g. Pump Pressure OK, Valve Open).
+    3. Physically executing watering using the mock-pump-actuator-mcp.
+  mcpServers:
+    - name: mock-pump-actuator-mcp

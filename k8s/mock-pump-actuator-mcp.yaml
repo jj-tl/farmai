@@ -1,0 +1,8 @@
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: mock-pump-actuator-mcp
+  namespace: smart-farm-demo
+spec:
+  transportType: sse
+  url: http://mock-pump-actuator-service.smart-farm-demo.svc.cluster.local:3001/sse

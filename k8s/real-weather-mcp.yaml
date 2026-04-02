@@ -1,0 +1,13 @@
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: real-weather-api-mcp
+  namespace: smart-farm-demo
+spec:
+  deployment:
+    cmd: npx
+    args:
+      - "-y"
+      - "@philschmid/weather-mcp" # REAL weather MCP that supports open-meteo without api keys
+    port: 3001
+    transportType: stdio

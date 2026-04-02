@@ -1,0 +1,8 @@
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: mock-soil-sensor-mcp
+  namespace: smart-farm-demo
+spec:
+  transportType: sse
+  url: http://mock-soil-sensor-mcp-service.smart-farm-demo.svc.cluster.local:3000/sse

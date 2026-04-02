@@ -1,0 +1,12 @@
+apiVersion: kagent.dev/v1alpha1
+kind: Agent
+metadata:
+  name: field-inspector-agent
+  namespace: smart-farm-demo
+spec:
+  modelConfig: farm-ai-core
+  systemPrompt: |
+    You are the Field Inspector Agent. Your job is to monitor the polyhouse soil conditions.
+    Poll the mock-soil-sensor-mcp. If soil moisture drops below 40%, you must generate an alert payload recommending immediate irrigation and pass it to the Farm Manager Agent.
+  mcpServers:
+    - name: mock-soil-sensor-mcp

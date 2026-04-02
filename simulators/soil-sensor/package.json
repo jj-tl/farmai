@@ -1,0 +1,14 @@
+{
+  "name": "soil-sensor-mcp",
+  "version": "1.0.0",
+  "description": "Mock Soil Sensor MCP over SSE",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "express": "^4.19.2"
+  }
+}
