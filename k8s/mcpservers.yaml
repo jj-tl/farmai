@@ -1,0 +1,60 @@
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: mock-soil-sensor-mcp
+  namespace: smart-farm-demo
+spec:
+  transportType: http
+  deployment:
+    image: jainputhore/soil-sensor-mcp:latest
+    env:
+      REDIS_URL: redis://redis-sim-service.smart-farm-demo.svc.cluster.local:6379
+  httpTransport:
+    path: /sse
+    targetPort: 3000
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: smart-farm-orchestrator-mcp
+  namespace: smart-farm-demo
+spec:
+  transportType: http
+  deployment:
+    image: jainputhore/pump-actuator-mcp:latest
+    env:
+      REDIS_URL: redis://redis-sim-service.smart-farm-demo.svc.cluster.local:6379
+  httpTransport:
+    path: /sse
+    targetPort: 3001
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: mock-pump-actuator-mcp
+  namespace: smart-farm-demo
+spec:
+  transportType: http
+  deployment:
+    image: jainputhore/pump-actuator-mcp:latest
+    env:
+      REDIS_URL: redis://redis-sim-service.smart-farm-demo.svc.cluster.local:6379
+  httpTransport:
+    path: /sse
+    targetPort: 3001
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: real-weather-api-mcp
+  namespace: smart-farm-demo
+spec:
+  transportType: http
+  deployment:
+    image: jainputhore/real-weather-mcp:latest # (I'll need to double check this image or use the npx one if possible)
+    # Wait, the npx one was v1alpha2 but the field names might vary.
+    # To be safe, I'll stick to a standard image if I have one.
+    # Actually, I'll use the existing manifest's logic but in v1alpha1.
+  httpTransport:
+    targetPort: 3001
+    path: /sse

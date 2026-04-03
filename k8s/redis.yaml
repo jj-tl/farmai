@@ -1,34 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pump-actuator-simulator
+  name: redis-state-store
   namespace: smart-farm-demo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pump-actuator
+      app: redis-sim-state
   template:
     metadata:
       labels:
-        app: pump-actuator
+        app: redis-sim-state
     spec:
       containers:
-      - name: simulator
-        image: mock-pump-mcp:latest
-        imagePullPolicy: Never
+      - name: redis
+        image: redis:alpine
         ports:
-        - containerPort: 3001
+        - containerPort: 6379
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mock-pump-actuator-service
+  name: redis-sim-service
   namespace: smart-farm-demo
 spec:
   selector:
-    app: pump-actuator
+    app: redis-sim-state
   ports:
     - protocol: TCP
-      port: 3001
-      targetPort: 3001
+      port: 6379
+      targetPort: 6379

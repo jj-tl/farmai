@@ -1,8 +1,14 @@
-apiVersion: kagent.dev/v1alpha2
+apiVersion: kagent.dev/v1alpha1
 kind: MCPServer
 metadata:
   name: mock-pump-actuator-mcp
   namespace: smart-farm-demo
 spec:
-  transportType: sse
-  url: http://mock-pump-actuator-service.smart-farm-demo.svc.cluster.local:3001/sse
+  transportType: http
+  deployment:
+    image: jainputhore/pump-actuator-mcp:latest
+    env:
+      REDIS_URL: redis://redis-sim-service.smart-farm-demo.svc.cluster.local:6379
+  httpTransport:
+    path: /sse
+    targetPort: 3001

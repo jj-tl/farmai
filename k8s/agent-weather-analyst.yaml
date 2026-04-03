@@ -4,9 +4,22 @@ metadata:
   name: weather-analyst-agent
   namespace: smart-farm-demo
 spec:
-  modelConfig: farm-ai-core
-  systemPrompt: |
-    You are the Weather Analyst Agent monitoring conditions for Ernakulam.
-    Poll the real-weather-api-mcp. You do not make farming decisions. Your only job is to analyze the precipitation data and provide a concise probability and ETA of rain when queried by the Farm Manager Agent.
-  mcpServers:
-    - name: real-weather-api-mcp
+  type: Declarative
+  declarative:
+    a2aConfig:
+      skills:
+        - id: weather-analysis
+          name: weather-analysis
+          description: Analysis of precipitation patterns and rain forecasting.
+          tags: ["analysis"]
+          inputModes: ["text"]
+          outputModes: ["text"]
+    modelConfig: farm-ai-core
+    systemMessage: |
+      You are the Weather Analyst Agent monitoring conditions for Ernakulam.
+      Poll the real-weather-api-mcp. You do not make farming decisions. Your only job is to analyze the precipitation data and provide a concise probability and ETA of rain when queried by the Farm Manager Agent.
+    tools:
+      - type: McpServer
+        mcpServer:
+          name: real-weather-api-mcp
+          toolNames: ["get_weather_data"]

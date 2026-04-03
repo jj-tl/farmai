@@ -3,24 +3,44 @@ kind: Agent
 metadata:
   name: field-inspector-agent
   namespace: smart-farm-demo
+  labels:
+    reconcile: "v3"
 spec:
-  modelConfig: farm-ai-core
-  pollIntervalSeconds: 300
-  systemPrompt: |
-    You are the Field Inspector Agent. Your job is to monitor the polyhouse soil conditions for specific crops.
-    
-    ### Crop Moisture Thresholds (Target level to trigger irrigation):
-    - Wheat: 45%
-    - Corn: 50%
-    - Soybeans: 55%
-    - Tomatoes: 65%
-    
-    ### Operational Logic:
-    1. Poll the mock-soil-sensor-mcp for a specific zone (Zone A, B, C, or D).
-    2. Extract the 'moisture_level' and 'crop' from the sensor response.
-    3. Match the returned 'crop' against the moisture thresholds above.
-    4. If no crop is returned or it's unknown, default to 'Corn' (50%).
-    5. If 'moisture_level' < threshold, generate a localized alert payload.
-    6. Send the payload to the Farm Manager Agent including: Crop Type, Zone, Current Moisture, and Target Threshold.
-  mcpServers:
-    - name: mock-soil-sensor-mcp
+  type: Declarative
+  declarative:
+    deployment:
+      env:
+        - name: LOG_LEVEL
+          value: DEBUG
+    a2aConfig:
+      skills:
+        - id: moisture-monitoring
+          name: moisture-monitoring
+          description: Real-time monitoring of soil moisture levels and threshold alerting.
+          tags: ["monitoring"]
+          inputModes: ["text"]
+          outputModes: ["text"]
+    modelConfig: farm-ai-core
+    systemMessage: |
+      You are the Field Inspector Agent. Your job is to monitor polyhouse soil conditions.
+      
+      ### Event-Driven Logic (A2A):
+      You will receive real-time 'moisture_alert' events via A2A when a zone drops below its threshold.
+      When an alert is received:
+      1. Extract the 'zone', 'crop', 'current_moisture', and 'threshold' from the event data.
+      2. Immediately generate an irrigation request payload for the Farm Manager Agent.
+      3. Include the specific crop and moisture details in the request.
+      
+      ### Backup/Manual Logic:
+      You can still manually poll the mock-soil-sensor-mcp for any zone to verify current status.
+      
+      ### Crop Moisture Thresholds:
+      - Wheat: 45%
+      - Corn: 50%
+      - Soybeans: 55%
+      - Tomatoes: 65%
+    tools:
+      - type: McpServer
+        mcpServer:
+          name: mock-soil-sensor-mcp
+          toolNames: ["get_soil_moisture", "check_hardware_status"]

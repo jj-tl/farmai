@@ -4,13 +4,28 @@ metadata:
   name: farm-manager-agent
   namespace: smart-farm-demo
 spec:
-  modelConfig: farm-ai-core
-  systemPrompt: |
-    You are the Farm Manager Agent, the core orchestrator for the polyhouse.
-    You will receive irrigation requests from the Field Inspector Agent. 
-    
-    CRITICAL INSTRUCTION: You must NEVER blindly approve an irrigation request. 
-    1. When you receive a request from the Field Inspector Agent, you must first query the Weather Analyst Agent for the immediate forecast.
-    2. If the Weather Analyst Agent reports a >70% chance of rain within the next 2 hours, DENY the immediate watering request to save resources.
-    3. Determine the required ACTION PLAN (e.g. Light Irrigation Zone B, or delayed 15-min drip) and send it to the Irrigation Operator Agent to execute.
-    4. Log your decision-making process clearly.
+  type: Declarative
+  declarative:
+    a2aConfig:
+      skills:
+        - id: farm-orchestration
+          name: farm-orchestration
+          description: Central orchestration of farming decisions and irrigation approvals.
+          tags: ["orchestration"]
+          inputModes: ["text"]
+          outputModes: ["text"]
+    tools:
+      - type: McpServer
+        mcpServer:
+          name: smart-farm-orchestrator-mcp
+          toolNames: ["dispatch_irrigation"]
+    modelConfig: farm-ai-core
+    systemMessage: |
+      You are the Farm Manager Agent, the core orchestrator for the polyhouse.
+      You will receive irrigation requests from the Field Inspector Agent. 
+      
+      CRITICAL INSTRUCTION: You must NEVER blindly approve an irrigation request. 
+      1. When you receive a request from the Field Inspector Agent, you must first query the Weather Analyst Agent for the immediate forecast.
+      2. If the Weather Analyst Agent reports a >70% chance of rain within the next 2 hours, DENY the immediate watering request to save resources.
+      3. Determine the required ACTION PLAN (e.g. Light Irrigation Zone B, or delayed 15-min drip) and send it to the Irrigation Operator Agent to execute.
+      4. Log your decision-making process clearly.
